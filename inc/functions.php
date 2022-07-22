@@ -1,5 +1,6 @@
 <?php
 define('DB_NAME', 'C:\xampp\htdocs\learnphp/crud/db.text');
+//define('DB_NAME', 'J:\Website\htdocs\learnphp\crud\db.text');
 
 function seed()
 {
@@ -58,7 +59,7 @@ function generateReport()
     <tr>
         <td> <?php printf("%s %s", $student['fname'], $student['lname']); ?></td>
         <td><?php printf("%s", $student['roll']); ?> </td>
-        <td><?php printf("<a href='/learnphp/crud/index.php?task=edit&id=%s'>Edit</a> | <a href='/learnphp/crud/index.php?task=delete&id=%s''>Delete</a>", $student['id'], $student['id']); ?>
+        <td><?php printf("<a href='/learnphp/crud/index.php?task=edit&id=%s'>Edit</a> | <a class='delete' href='/learnphp/crud/index.php?task=delete&id=%s''>Delete</a>", $student['id'], $student['id']); ?>
         </td>
 
     </tr>
@@ -81,7 +82,7 @@ function addStudent($fname, $lname, $roll)
     }
     if (!$found) {
 
-        $newId = count($students) + 1;
+        $newId = getNewId($students);
         $student = array(
             'id' => $newId,
             'fname' => $fname,
@@ -132,4 +133,25 @@ function updateStudent($id, $fname, $lname, $roll)
         return true;
     }
     return false;
+}
+
+function deleteStudent($id)
+{
+    $serializeData = file_get_contents(DB_NAME);
+    $students = unserialize($serializeData);
+    foreach ($students as $haju => $student) {
+        if ($student['id'] == $id) {
+            unset($students[$haju]);
+        }
+    }
+    $serializeData = serialize($students);
+    file_put_contents(DB_NAME, $serializeData, LOCK_EX);
+}
+
+
+
+function getNewId($students)
+{
+    $maxId = max(array_column($students, 'id'));
+    return $maxId + 1;
 }
