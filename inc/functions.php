@@ -80,6 +80,7 @@ function addStudent($fname, $lname, $roll)
             break;
         }
     }
+
     if (!$found) {
 
         $newId = getNewId($students);
