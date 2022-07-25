@@ -2,14 +2,29 @@
 $info = '';
 $task = $_GET['task'] ?? 'report';
 $error = $_GET['error'] ?? '0';
+if ('edit' == $task){
+    if (!hasPrivilege()){
+        if (!isAdmin()){
+            header('location: /learnphp/crud/index.php?task=report');
+        }
+    }
+}
 if ('delete' == $task) {
+    if (!isAdmin()){
+        header('location: /learnphp/crud/index.php?task=report');
+        return;
+    }
     $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
     if ($id > 0) {
         deleteStudent($id);
         header('location: /learnphp/crud/index.php?task=report');
+        return;
     }
 }
 if ('seed' == $task) {
+    if (!isAdmin()){
+        header('location: /learnphp/crud/index.php?task=report');
+    }
     seed();
     $info = "seeding is complete";
 }

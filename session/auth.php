@@ -6,15 +6,15 @@ $error = false;
 //session_destroy();
 if (isset($_POST['username']) && isset($_POST['password'])) {
     if ('admin' == $_POST['username'] && '6d0ebbbdce32474db8141d23d2c01bd9628d6e5f' == sha1($_POST['password'])) {
-        $_SESSION['logged'] = true;
+        $_SESSION['loggedin'] = true;
     } else {
         $error = true;
-        $_SESSION['logged'] = false;
+        $_SESSION['loggedin'] = false;
     }
 }
 
 if (isset($_POST['logout'])) {
-    $_SESSION['logged'] =  false;
+    $_SESSION['loggedin'] =  false;
     session_destroy();
 }
 ?>
@@ -47,7 +47,7 @@ if (isset($_POST['logout'])) {
 
                 <?php
                 echo  sha1('rabbit') . "<br/>";
-                if (true == $_SESSION['logged']) {
+                if (true == $_SESSION['loggedin']) {
                     echo "hello admin, Welcome!";
                 } else {
                     echo "Hello Stranger, login below";
@@ -69,7 +69,7 @@ if (isset($_POST['logout'])) {
                     echo  "<blockquote> username &  password didn't match</blockquote>";
                 }
 
-                if (false == $_SESSION['logged']) :  ?>
+                if (false == $_SESSION['loggedin']) :  ?>
                 <form method="POST">
                     <label for=username>Username</label>
                     <input type="text" name='username' id="username">

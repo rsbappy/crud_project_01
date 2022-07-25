@@ -4,18 +4,36 @@ session_start([
 ]);
 $error = false;
 //session_destroy();
-if (isset($_POST['username']) && isset($_POST['password'])) {
-    if ('admin' == $_POST['username'] && '6d0ebbbdce32474db8141d23d2c01bd9628d6e5f' == sha1($_POST['password'])) {
-        $_SESSION['logged'] = true;
-    } else {
-        $error = true;
-        $_SESSION['logged'] = false;
+$username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING);
+$password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_STRING);
+$fp = fopen("./data/user.txt", "r");
+if ($username && $password) {
+    $_SESSION['loggedin'] =  false;
+    $_SESSION['user']  = false;
+    $_SESSION['role'] = false;
+
+    while ($data = fgetcsv($fp)) {
+
+        if ($data[0] == $username && $data[1] == sha1($password)) {
+            $_SESSION['loggedin'] = true;
+            $_SESSION['user']  = $username;
+            $_SESSION['role'] = $data[2];
+            $_SESSION['role'] = $data[2];
+            header('location:index.php');
+        }
+        if (!$_SESSION['loggedin']) {
+            $error = true;
+        }
     }
 }
 
-if (isset($_POST['logout'])) {
-    $_SESSION['logged'] =  false;
+if (isset($_GET['logout'])) {
+    $_SESSION['loggedin'] =  false;
+    $_SESSION['user']  = false;
+    $_SESSION['role'] = false;
     session_destroy();
+    header('location:index.php');
+
 }
 ?>
 
@@ -46,8 +64,7 @@ if (isset($_POST['logout'])) {
             <div class="column column-60 column-offset-20">
 
                 <?php
-                echo  sha1('rabbit') . "<br/>";
-                if (true == $_SESSION['logged']) {
+                if (true == isset($_SESSION['loggedin']) ) {
                     echo "hello admin, Welcome!";
                 } else {
                     echo "Hello Stranger, login below";
@@ -65,25 +82,30 @@ if (isset($_POST['logout'])) {
             <div class="column column-60 column-offset-20">
 
                 <?php
+
                 if ($error) {
                     echo  "<blockquote> username &  password didn't match</blockquote>";
                 }
 
-                if (false == $_SESSION['logged']) :  ?>
-                <form method="POST">
+                if (false == isset($_SESSION['loggedin'])):  ?>
+                <form  method="POST">
                     <label for=username>Username</label>
                     <input type="text" name='username' id="username">
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password">
                     <button type="submit" class="button-primary" name="submit">Log In</button>
                 </form>
-                <?php else : ?>
-                <form method="POST">
+                <?php
+                else:
+                    ?>
+                <form action="auth.php" method="POST">
                     <input type="hidden" name="logout" value="1">
                     <button type="submit" class="button-primary" name="submit">Log Out</button>
                 </form>
 
-                <?php endif; ?>
+                <?php
+                endif;
+                ?>
 
 
 

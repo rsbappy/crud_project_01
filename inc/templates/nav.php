@@ -1,3 +1,5 @@
+
+<?php  session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,31 +11,58 @@
     <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
 
 
-    <style>
-    .btn_task {
-        background-color: black;
-        color: white;
-        margin: 0px 7px;
-        padding: 15px;
-        font-weight: bold;
-        border-radius: 10px;
-
-    }
-
-
-    .btn_task:hover {
-        color: yellow;
-    }
-    </style>
+<!--    <style>-->
+<!--    .btn_task {-->
+<!--        background-color: black;-->
+<!--        color: white;-->
+<!--        margin: 0px 7px;-->
+<!--        padding: 15px;-->
+<!--        font-weight: bold;-->
+<!--        border-radius: 10px;-->
+<!---->
+<!--    }-->
+<!---->
+<!---->
+<!--    .btn_task:hover {-->
+<!--        color: yellow;-->
+<!--    }-->
+<!--    </style>-->
 </head>
 
 <body>
+    <div style="border-bottom: 1px solid; border-color:#eee; padding-bottom: 30px; margin-bottom:30px;">
+        <div class="float-left">
+        <p>
+            <a class="btn_task" href="/learnphp/crud/index.php?task=report">All Students </a>
+            <?php if (isAdmin() || isEditor()): ?>|
+            <a class="btn_task" href="/learnphp/crud/index.php?task=add">Add New Student </a>
+            <?php endif; ?>
+            <?php if (isAdmin()): ?>
+            |
+            <a class="btn_task" href="/learnphp/crud/index.php?task=seed">Seed</a>
+            <?php endif; ?>
+        </p>
 
-    <p>
-        <a class="btn_task" href="/learnphp/crud/index.php?task=report">All Students</a>
-        <a class="btn_task" href="/learnphp/crud/index.php?task=add">Add New Student</a>
-        <a class="btn_task" href="/learnphp/crud/index.php?task=seed">Seed</a>
-    </p>
+
+            </div>
+
+        <div class="float-right">
+            <?php
+
+            if ( ! isset($_SESSION['loggedin']) ):
+                ?>
+                <a href="/learnphp/crud/auth.php">Log In</a>
+            <?php
+            else:
+                ?>
+                <a href="/learnphp/crud/auth.php?logout=true">Log Out (<?php echo $_SESSION['role']; ?>)</a>
+            <?php
+            endif;
+            ?>
+        </div>
+
+
+    </div>
 </body>
 
 </html>
