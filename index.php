@@ -1,19 +1,19 @@
-<?php require_once "inc/functions.php";
+<?php session_start(); require_once "inc/functions.php";
 $info = '';
 $task = $_GET['task'] ?? 'report';
 $error = $_GET['error'] ?? '0';
+
 if ('edit' == $task){
     if (!hasPrivilege()){
-        if (!isAdmin()){
-            header('location: /learnphp/crud/index.php?task=report');
-        }
+	    header('location: /learnphp/crud/index.php?task=report');
+
     }
 }
 if ('delete' == $task) {
-    if (!isAdmin()){
+  if (!isAdmin()){
         header('location: /learnphp/crud/index.php?task=report');
-        return;
-    }
+    return;
+   }
     $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
     if ($id > 0) {
         deleteStudent($id);
@@ -24,6 +24,7 @@ if ('delete' == $task) {
 if ('seed' == $task) {
     if (!isAdmin()){
         header('location: /learnphp/crud/index.php?task=report');
+	    return;
     }
     seed();
     $info = "seeding is complete";

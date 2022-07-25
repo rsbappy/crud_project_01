@@ -1,5 +1,5 @@
 
-<?php  session_start();?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,7 +34,7 @@
         <div class="float-left">
         <p>
             <a class="btn_task" href="/learnphp/crud/index.php?task=report">All Students </a>
-            <?php if (isAdmin() || isEditor()): ?>|
+            <?php if (hasPrivilege()): ?>|
             <a class="btn_task" href="/learnphp/crud/index.php?task=add">Add New Student </a>
             <?php endif; ?>
             <?php if (isAdmin()): ?>
@@ -49,7 +49,7 @@
         <div class="float-right">
             <?php
 
-            if ( ! isset($_SESSION['loggedin']) ):
+            if ( ! @$_SESSION['loggedin'] ):
                 ?>
                 <a href="/learnphp/crud/auth.php">Log In</a>
             <?php
